@@ -955,6 +955,9 @@ ice_prepare_for_reset(struct ice_pf *pf, enum ice_reset_req reset_type)
 	/* Make sure the miscellaneous IRQ handler sees that reset started */
 	synchronize_irq(pf->oicr_irq.virq);
 
+	/* Capture FTDC diagnostic data before tearing down the driver state */
+	ice_ftdc_trigger(pf, reset_type);
+
 	/* if alloc of event fails, we still need to perform the reset,
 	 * can't fail on this, so warn on failure and move on
 	 **/

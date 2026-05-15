@@ -92,6 +92,7 @@ ice-$(CONFIG_NET_DEVLINK:m=y) += ice_devlink.o devlink/health.o ice_fw_update.o
 ice-$(CONFIG_NET_DEVLINK:m=y) += ice_eswitch.o ice_repr.o
 ice-y += ice_aux_support.o
 ice-y += ice_idc.o
+ice-y += ice_ftdc.o
 ice-$(CONFIG_DEBUG_FS) += ice_debugfs.o
 ice-$(CONFIG_DEBUG_FS) += ice_fwlog.o
 

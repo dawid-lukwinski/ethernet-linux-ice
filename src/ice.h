@@ -104,6 +104,7 @@
 #include "ice_lag.h"
 #endif /* HAVE_NETDEV_UPPER_INFO */
 #include "ice_trace.h"
+#include "ice_ftdc.h"
 
 #if defined(HAVE_VXLAN_RX_OFFLOAD) || defined(HAVE_VXLAN_TYPE)
 #if IS_ENABLED(CONFIG_VXLAN)
