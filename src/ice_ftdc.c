@@ -18,9 +18,16 @@
 #endif
 
 /* FW dump constants (matching the AQ protocol for internal data dump) */
-#define ICE_FTDC_FW_DATA_SIZE	4096
-#define ICE_FTDC_FW_LAST_IDX	0xFFFFFFFF
-#define ICE_FTDC_FW_LAST_ID2	0xFFFF
+#define ICE_FTDC_FW_DATA_SIZE		4096
+#define ICE_FTDC_FW_LAST_IDX		0xFFFFFFFF
+#define ICE_FTDC_FW_LAST_ID2		0xFFFF
+
+/* Maximum number of 4KB blocks to read per FW cluster */
+#define ICE_FTDC_MAX_BLKS_PER_CLUSTER	64
+
+/* Minimum buffer space required before writing another VSI entry or block */
+#define ICE_FTDC_VSI_BUF_MARGIN		256
+#define ICE_FTDC_FW_BUF_MARGIN		512
 
 /* Cluster IDs to dump from FW - the most useful ones for diagnostics */
 static const u16 ice_ftdc_cluster_ids[] = {
@@ -295,7 +302,7 @@ static int ice_ftdc_dump_vsi_info(char *buf, int remain, struct ice_pf *pf)
 			      vsi->state[0]);
 		written += n;
 
-		if (remain - written < 256)
+		if (remain - written < ICE_FTDC_VSI_BUF_MARGIN)
 			break;
 	}
 
@@ -345,7 +352,7 @@ static int ice_ftdc_dump_fw_clusters(char *buf, int remain,
 			      "cluster-%u:\n", cluster_id);
 		written += n;
 
-		while (blk_count < 64) {
+		while (blk_count < ICE_FTDC_MAX_BLKS_PER_CLUSTER) {
 			u16 next_cluster_id, next_tbl_id, buf_len;
 			u32 next_blk_idx;
 			int res, j;
@@ -406,7 +413,7 @@ static int ice_ftdc_dump_fw_clusters(char *buf, int remain,
 			tbl_id = next_tbl_id;
 
 			/* Safety check for buffer space */
-			if (remain - written < 512)
+			if (remain - written < ICE_FTDC_FW_BUF_MARGIN)
 				goto out;
 		}
 	}
